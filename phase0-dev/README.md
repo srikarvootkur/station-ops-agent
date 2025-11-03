@@ -121,23 +121,23 @@ He only needs to click *Approve*.
 
 ```mermaid
 graph TD
-  subgraph Client & Approvals
-    SLK[Slack App (Buttons/Approvals)]
+  subgraph Client_Approvals
+    SLK[Slack App Buttons_Approvals]
     CON[Small Web Console]
   end
 
-  subgraph AWS VPC
-    API[FastAPI Agent Orchestrator (ECS)]
-    LPR[Lambda Jobs (Ingest/Pricing/Brief)]
-    RDS[(Postgres)]
-    S3[(S3 Storage)]
+  subgraph AWS_VPC
+    API[FastAPI Agent Orchestrator ECS]
+    LPR[Lambda Jobs Ingest_Pricing_Brief]
+    RDS[Postgres]
+    S3[S3 Storage]
     SES[SES Email]
     EVT[EventBridge Cron]
     BR[Bedrock LLM Endpoint]
   end
 
   subgraph External
-    POS[POS/Back Office CSV]
+    POS[POS Back Office CSV]
     DTW[DTW Wholesale Costs]
     COMP[Competitor Price Feed]
   end
@@ -151,13 +151,14 @@ graph TD
   EVT --> API
 
   LPR -->|Insert| RDS
-  API -->|Read/Write| RDS
-  API -->|Read/Write| S3
+  API -->|Read_Write| RDS
+  API -->|Read_Write| S3
 
-  API -->|Draft Emails/Plan| BR
+  API -->|Draft Emails_Plan| BR
   API -->|Send Emails| SES
 
   SLK -->|Approval Button| API
   API -->|Post Results| SLK
 
   CON -->|HTTPS| API
+  ```
