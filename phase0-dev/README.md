@@ -117,7 +117,33 @@ He only needs to click *Approve*.
 
 ---
 
-## Mermaid Architecture Diagram
+## Mermaid Architecture Diagrams
+
+```mermaid
+graph TD
+  subgraph Users
+    SLK[Slack bot Approve Adjust Skip]
+  end
+
+  subgraph AWS
+    APIGW[API Gateway]
+    API[FastAPI service on ECS]
+    EVT[EventBridge hourly]
+    JOB[Lambda pricing job]
+    RDS[RDS Postgres]
+    S3[S3 raw uploads]
+    CW[CloudWatch logs and alarms]
+  end
+
+  SLK -->|button webhook| APIGW --> API
+  EVT --> JOB
+  S3 -->|dtw csv competitor csv| JOB
+  JOB -->|compute proposals| RDS
+  API -->|read write| RDS
+  API -->|post proposals and results| SLK
+  API --> CW
+  JOB --> CW
+```
 
 ```mermaid
 graph TD
