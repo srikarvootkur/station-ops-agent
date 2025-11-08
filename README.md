@@ -50,3 +50,54 @@ Focus: external customers, onboarding other station owners.
 - Designed to expand into EV, charging hubs, and travel centers
 
 ---
+
+```mermaid
+graph TD
+  subgraph Users
+    PWA[PWA Web App]
+    SLK[Slack Bot]
+    WAB[WhatsApp Bot]
+  end
+
+  subgraph Edge
+    CDN[CDN + Static Hosting]
+    APIGW[API Gateway]
+  end
+
+  subgraph Core
+    ECS[FastAPI Orchestrator on ECS]
+    LPR[Lambda Jobs ingest, pricing, restock, brief]
+    RDS[RDS Postgres]
+    REDIS[ElastiCache Redis]
+    S3[S3 Raw and Artifacts]
+    SES[SES Email]
+    EVT[EventBridge Cron]
+    PUSH[Web Push Service]
+    LLM[LLM Adapter]
+    CW[CloudWatch Logs and Alarms]
+    AUTH[Auth Service Magic Links]
+  end
+
+  PWA --> CDN
+  CDN --> PWA
+  PWA --> APIGW
+  SLK --> APIGW
+  WAB --> APIGW
+
+  APIGW --> ECS
+  EVT --> LPR
+  S3 --> LPR
+  LPR --> RDS
+  ECS --> RDS
+  ECS --> REDIS
+  ECS --> S3
+  ECS --> SES
+  ECS --> LLM
+  ECS --> CW
+  LPR --> CW
+  ECS --> PUSH
+  PWA --> PUSH
+  PWA --> AUTH
+  SLK -->|Deep link| PWA
+  WAB -->|Deep link| PWA
+```
